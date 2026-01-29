@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const API_URL = import.meta.env.VITE_API_URL || 'https://dsamernapp.onrender.com';
 
-console.log("vekha", API_URL)
+console.log("check", API_URL)
 
 const api = axios.create({
   baseURL: API_URL,
