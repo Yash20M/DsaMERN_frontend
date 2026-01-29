@@ -1,4 +1,4 @@
-const ProblemList = ({ problems, completedProblems, onToggleProblem }) => {
+const ProblemList = ({ problems, completedProblems, onToggleProblem, togglingProblem }) => {
   const isProblemCompleted = (problemId) => {
     return completedProblems.includes(problemId);
   };
@@ -15,28 +15,37 @@ const ProblemList = ({ problems, completedProblems, onToggleProblem }) => {
     <div className="space-y-4">
       {problems.map((problem) => {
         const isCompleted = isProblemCompleted(problem._id);
+        const isToggling = togglingProblem === problem._id;
         
         return (
           <div
             key={problem._id}
             className={`card p-5 transition-all duration-300 hover:shadow-xl ${
               isCompleted ? 'bg-green-50 border-2 border-green-300' : 'bg-white border-2 border-gray-100 hover:border-primary-300'
-            }`}
+            } ${isToggling ? 'opacity-60' : ''}`}
           >
             <div className="flex justify-between items-start mb-3">
               <div className="flex items-start gap-3 flex-1">
-                <input
-                  type="checkbox"
-                  id={`problem-${problem._id}`}
-                  checked={isCompleted}
-                  onChange={() => onToggleProblem(problem._id)}
-                  className="w-5 h-5 mt-1 cursor-pointer accent-primary-500"
-                />
+                <div className="relative">
+                  <input
+                    type="checkbox"
+                    id={`problem-${problem._id}`}
+                    checked={isCompleted}
+                    onChange={() => onToggleProblem(problem._id)}
+                    disabled={isToggling}
+                    className="w-5 h-5 mt-1 cursor-pointer accent-primary-500 disabled:cursor-not-allowed"
+                  />
+                  {isToggling && (
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="w-5 h-5 border-2 border-primary-500 border-t-transparent rounded-full animate-spin"></div>
+                    </div>
+                  )}
+                </div>
                 <label
                   htmlFor={`problem-${problem._id}`}
                   className={`cursor-pointer flex-1 ${
                     isCompleted ? 'line-through text-green-600' : 'text-gray-800'
-                  }`}
+                  } ${isToggling ? 'pointer-events-none' : ''}`}
                 >
                   <h3 className="text-lg font-semibold">{problem.title}</h3>
                 </label>

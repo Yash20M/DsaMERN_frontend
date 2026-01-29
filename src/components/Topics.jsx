@@ -11,6 +11,7 @@ const Topics = () => {
   const [completedProblems, setCompletedProblems] = useState([]);
   const [progress, setProgress] = useState({ completedCount: 0, totalProblems: 0, progressPercentage: 0 });
   const [loading, setLoading] = useState(true);
+  const [togglingProblem, setTogglingProblem] = useState(null);
 
   useEffect(() => {
     fetchTopics();
@@ -69,11 +70,14 @@ const Topics = () => {
 
   const handleToggleProblem = async (problemId) => {
     try {
+      setTogglingProblem(problemId);
       await problemsAPI.toggleCompletion(problemId);
       await fetchProgress();
       await fetchTopics(true);
     } catch (error) {
       console.error('Error toggling problem:', error);
+    } finally {
+      setTogglingProblem(null);
     }
   };
 
@@ -192,6 +196,7 @@ const Topics = () => {
                     problems={problems}
                     completedProblems={completedProblems}
                     onToggleProblem={handleToggleProblem}
+                    togglingProblem={togglingProblem}
                   />
                 </>
               )}
